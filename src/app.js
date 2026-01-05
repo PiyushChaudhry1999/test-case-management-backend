@@ -1,50 +1,46 @@
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
-
 const swaggerUi = require("swagger-ui-express");
-const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerSpec = require("./config/swagger");
 
-// Routes
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const testCaseRoutes = require("./routes/testCaseRoutes");
 
 const app = express();
 
-/* ✅ CORS CONFIG */
+/* CORS */
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  "https://piyushchaudhry1999.github.io", // deployed frontend
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend URL
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
-
 app.use(express.json());
 
-/* 🔹 SWAGGER SETUP */
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Test Case Management API",
-      version: "1.0.0",
-      description: "API documentation for Test Case Management System",
-    },
-  },
-  apis: [path.join(__dirname, "/routes/**/*.js")], // <- double wildcard for all route files
-};
-
-const specs = swaggerJsdoc(options);
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(specs));
+/* ✅ SWAGGER (MUST BE BEFORE ROUTES) */
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /* ROUTES */
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/testcases", testCaseRoutes);
 
-/* HEALTH CHECK */
+/* HEALTH */
 app.get("/", (req, res) => {
   res.send("API running");
 });

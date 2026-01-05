@@ -6,13 +6,13 @@ const { authenticate, authorize } = require("../middlewares/authMiddleware");
  * @swagger
  * /api/testcases:
  *   get:
- *     summary: Get all test cases (all authenticated users)
+ *     summary: Get test cases
  *     tags: [Test Cases]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Test cases fetched successfully
+ *         description: Test cases fetched
  */
 router.get("/", authenticate, (req, res) => {
   res.json({ message: "Test cases fetched successfully" });
@@ -22,28 +22,10 @@ router.get("/", authenticate, (req, res) => {
  * @swagger
  * /api/testcases:
  *   post:
- *     summary: Create a new test case (Admin/Test Lead)
+ *     summary: Create test case
  *     tags: [Test Cases]
  *     security:
  *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - title
- *             properties:
- *               title:
- *                 type: string
- *               description:
- *                 type: string
- *     responses:
- *       200:
- *         description: Test case created successfully
- *       403:
- *         description: Forbidden
  */
 router.post("/", authenticate, authorize("admin", "test-lead"), (req, res) => {
   res.json({ message: "Test case created successfully" });
