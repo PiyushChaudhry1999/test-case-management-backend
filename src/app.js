@@ -10,10 +10,7 @@ const testCaseRoutes = require("./routes/testCaseRoutes");
 const app = express();
 
 /* CORS */
-const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  "https://piyushchaudhry1999.github.io", // deployed frontend
-];
+const allowedOrigins = ["http://localhost:3000", "http://localhost:5173", "https://test-case-management-backend.onrender.com", "https://piyushchaudhry1999.github.io"];
 
 app.use(
   cors({
