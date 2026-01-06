@@ -1,4 +1,5 @@
 const swaggerJsdoc = require("swagger-jsdoc");
+const path = require("path");
 
 const options = {
   definition: {
@@ -28,7 +29,7 @@ const options = {
       },
     ],
   },
-  apis: ["./src/routes/*.js"], // 🚨 THIS IS CRITICAL
+  apis: [path.join(__dirname, "../routes/*.js")], // important!
 };
 
 module.exports = swaggerJsdoc(options);
