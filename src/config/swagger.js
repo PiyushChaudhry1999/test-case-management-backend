@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: process.env.NODE_ENV === "production" ? "https://test-case-management-backend.onrender.com" : "http://localhost:5000",
+        url: "https://test-case-management-backend.onrender.com",
       },
     ],
     components: {
